@@ -47,5 +47,5 @@ Whenever you edit any code you need to:
 * reload the extension in the browser
 * refresh the page
 
-I recommend you always increase the version because this is logged in the browser console when the extension is loaded (look for "pokerbot vX.Y") and lets you easily make sure that you succesfully updated the bot.
+I recommend you always increase the version because this is logged in the browser console when the extension is loaded (look for "urgency-randomizer vX.Y") and lets you easily make sure that you succesfully updated the bot.
 Otherwise you might risk running an older version without realizing it.
