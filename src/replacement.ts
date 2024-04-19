@@ -87,3 +87,11 @@ export function replaceMatchingNode(matchingNode: MatchingNode) {
     matchingNode.node.after(containerTag);
     matchingNode.node.remove();
 }
+
+export function findAndReplaceAllNodes() {
+    const matchingNodes = findMatchingNodes();
+
+    for (const m of matchingNodes)
+        replaceMatchingNode(m);
+
+}

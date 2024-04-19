@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Urgency Randomizer",
   "description": "Urgency Randomizer made for C-C",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "action": {
     "default_popup": "popup.html",
     "default_icon": "logo.png"

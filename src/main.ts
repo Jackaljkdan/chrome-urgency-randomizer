@@ -1,12 +1,8 @@
-import { findMatchingNodes, replaceMatchingNode } from "./replacement";
+import { findAndReplaceAllNodes } from "./replacement";
 
 console.log(`urgency-randomizer v${chrome.runtime.getManifest().version}`);
 
-const matchingNodes = findMatchingNodes();
-
-for (const m of matchingNodes)
-    replaceMatchingNode(m);
-
+findAndReplaceAllNodes();
 
 chrome.runtime.onMessage.addListener((message: ChromeMessage, sender, callback) => {
     switch (message) {
