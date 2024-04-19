@@ -11,8 +11,11 @@
   "license": "ISC",
   "devDependencies": {
     "@types/chrome": "0.0.204",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",
+    "eslint": "^8.57.0",
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.4",
