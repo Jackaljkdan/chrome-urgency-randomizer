@@ -2,56 +2,98 @@ console.log(`urgency-randomizer v${chrome.runtime.getManifest().version}`);
 
 const excludedParents = ["script", "style"];
 
-function findNodesAndReplaceContents() {
+function findMatchingNodes() {
+    const matchingNodes: MatchingNode[] = [];
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+
     while (walker.nextNode()) {
         const textNode = walker.currentNode as Text;
-        const parentName = textNode.parentNode?.nodeName.toLowerCase();
-        if (parentName != undefined && excludedParents.includes(parentName))
+        const parent = textNode.parentElement!;
+        const parentName = parent.nodeName.toLowerCase();
+
+        if (excludedParents.includes(parentName))
             continue;
 
-        // TODO: devo mettere in una lista quelli che matchano e solo dopo che ho finito il walk sostituirli
-        replaceNodeContent(textNode);
-    }
-}
-
-function replaceNodeContent(textNode: Text) {
-    console.log(textNode.textContent);
-    if (!textNode.textContent)
-        return;
-
-    const text = textNode.textContent;
-    const parent = textNode.parentNode!;
-
-    const word = "urgente";
-    const regex = new RegExp(word, "ig");
-    const matches = text.matchAll(regex);
-
-    for (const m of matches) {
-        console.log("match", m);
-
-        if (m.index == undefined)
+        if (parent.hasAttribute("data-urgency-randomizer"))
             continue;
 
-        const prevText = text.substring(0, m.index);
-        const prevNode = document.createTextNode(prevText);
+        if (!textNode.textContent)
+            continue;
 
-        const nextText = text.substring(m.index + word.length);
-        const nextNode = document.createTextNode(nextText);
+        const text = textNode.textContent;
 
-        const replacingSpan = document.createElement("span");
-        replacingSpan.innerHTML = "[REDACTED]";
+        const word = "urgente";
+        const regex = new RegExp(word, "ig");
+        const matches = [...text.matchAll(regex)];
 
-        parent.insertBefore(prevNode, textNode);
-        textNode.after(replacingSpan, nextNode);
-
-        textNode.remove();
-
-        return;
+        if (matches.length > 0) {
+            matchingNodes.push({
+                node: textNode,
+                matches: matches as any,
+            });
+        }
     }
+
+    return matchingNodes;
 }
 
-findNodesAndReplaceContents();
+function replaceMatchingNode(matchingNode: MatchingNode) {
+    const containerTag = document.createElement("span");
+    containerTag.setAttribute("data-urgency-randomizer", "container");
+
+    const text = matchingNode.node.textContent!;
+
+    const list: Content[] = [];
+
+    let fromIndex = 0;
+
+    for (const match of matchingNode.matches) {
+        // console.log("match", m);
+
+        if (match.index == undefined)
+            continue;
+
+        if (match.index > fromIndex)
+            list.push({ value: text.substring(fromIndex, match.index) });
+
+        list.push({
+            value: match[0],
+            replacer: "[REDACTED]",
+        });
+
+        fromIndex = match.index + match[0].length;
+    }
+
+    for (const entry of list) {
+        if (!entry.replacer) {
+            containerTag.appendChild(document.createTextNode(entry.value));
+        }
+        else {
+            const contentTag = document.createElement("span");
+            contentTag.setAttribute("data-urgency-randomizer", "content");
+            containerTag.appendChild(contentTag);
+
+            const originalContentTag = document.createElement("span");
+            originalContentTag.setAttribute("data-urgency-randomizer", "og");
+            originalContentTag.innerHTML = entry.value;
+            originalContentTag.style.display = "none";
+            contentTag.appendChild(originalContentTag);
+
+            const replacedContentTag = document.createElement("span");
+            replacedContentTag.setAttribute("data-urgency-randomizer", "replacer");
+            replacedContentTag.innerHTML = entry.replacer;
+            contentTag.appendChild(replacedContentTag);
+        }
+    }
+
+    matchingNode.node.after(containerTag);
+    matchingNode.node.remove();
+}
+
+const matchingNodes = findMatchingNodes();
+
+for (const m of matchingNodes)
+    replaceMatchingNode(m);
 
 
 chrome.runtime.onMessage.addListener((message: ChromeMessage, sender, callback) => {
