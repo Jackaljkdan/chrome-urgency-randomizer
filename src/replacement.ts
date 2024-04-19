@@ -1,8 +1,8 @@
 const excludedParents = ["script", "style"];
 
-export function findMatchingNodes() {
+export function findMatchingNodes(root: Node) {
     const matchingNodes: MatchingNode[] = [];
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
 
     while (walker.nextNode()) {
         const textNode = walker.currentNode as Text;
@@ -89,9 +89,14 @@ export function replaceMatchingNode(matchingNode: MatchingNode) {
 }
 
 export function findAndReplaceAllNodes() {
-    const matchingNodes = findMatchingNodes();
+    findAndReplaceNodesUnder(document.body);
+}
+
+export function findAndReplaceNodesUnder(root: Node) {
+    console.log("replacing...");
+
+    const matchingNodes = findMatchingNodes(root);
 
     for (const m of matchingNodes)
         replaceMatchingNode(m);
-
 }
