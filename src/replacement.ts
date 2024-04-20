@@ -62,6 +62,9 @@ export function replaceMatchingNode(matchingNode: MatchingNode) {
         fromIndex = match.index + match[0].length;
     }
 
+    // add all that remains after last matching word
+    list.push({ value: text.substring(fromIndex) });
+
     for (const entry of list) {
         if (!entry.replacer) {
             containerTag.appendChild(document.createTextNode(entry.value));
