@@ -1,4 +1,6 @@
-const excludedParents = ["script", "style"];
+import { isTrueForAnyAncestorElement } from "./utils";
+
+const excludedParents = ["SCRIPT", "STYLE", "INPUT", "TEXTAREA"];
 
 export function findMatchingNodes(root: Node) {
     const matchingNodes: MatchingNode[] = [];
@@ -7,15 +9,18 @@ export function findMatchingNodes(root: Node) {
     while (walker.nextNode()) {
         const textNode = walker.currentNode as Text;
         const parent = textNode.parentElement!;
-        const parentName = parent.nodeName.toLowerCase();
 
-        if (excludedParents.includes(parentName))
+        if (!textNode.textContent)
             continue;
 
         if (parent.hasAttribute("data-urgency-randomizer"))
             continue;
 
-        if (!textNode.textContent)
+        if (isTrueForAnyAncestorElement(parent, ancestor => (
+            ancestor.className.includes("editable"))
+            || ancestor.hasAttribute("g_editable")
+            || excludedParents.includes(ancestor.tagName)
+        ))
             continue;
 
         const text = textNode.textContent;
