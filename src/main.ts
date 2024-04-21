@@ -1,19 +1,23 @@
 import { onAnyMutation } from "./mutation";
 import { findAndReplaceAllNodes, findAndReplaceNodesUnder } from "./replacement";
+import { state } from "./state";
 
 console.log(`urgency-randomizer v${chrome.runtime.getManifest().version}`);
 
-findAndReplaceAllNodes();
+if (state.value === "on")
+    findAndReplaceAllNodes();
 
-onAnyMutation(findAndReplaceAllNodes);
+onAnyMutation(() => {
+    if (state.value === "on")
+        findAndReplaceAllNodes();
+});
 
 chrome.runtime.onMessage.addListener((message: ChromeMessage, sender, callback) => {
     switch (message) {
-        case "turn_on":
-            console.log("turning on");
+        case "on":
             findAndReplaceAllNodes();
             break;
-        case "turn_off":
+        case "off":
             console.log("turning off");
             break;
     }

@@ -1,4 +1,4 @@
-declare type ChromeMessage = "turn_on" | "turn_off";
+declare type ChromeMessage = "on" | "off";
 
 declare type MatchingNode = {
     node: Text,

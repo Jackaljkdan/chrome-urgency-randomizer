@@ -1,3 +1,4 @@
+import { state } from "../state";
 
 function sendMessage(message: ChromeMessage, callback?: (response: any) => void) {
     chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
@@ -6,12 +7,33 @@ function sendMessage(message: ChromeMessage, callback?: (response: any) => void)
     });
 }
 
-document.getElementById("on-btn")?.addEventListener("click", () => {
-    sendMessage("turn_on");
-    document.getElementById("status")!.innerHTML = "on";
-});
+const crossEmoji = "&#10060;";
+const checkmarkEmoji = "&#x2713;";
 
-document.getElementById("off-btn")?.addEventListener("click", () => {
-    sendMessage("turn_off");
-    document.getElementById("status")!.innerHTML = "off";
-});
+(function () {
+    const _btn = document.getElementById("btn");
+
+    if (!_btn) {
+        console.error("button not found");
+        return;
+    }
+
+    // avoid ts complaints
+    const btn = _btn;
+
+    function refreshBtn() {
+        btn.innerHTML = (
+            state.value === "on"
+                ? crossEmoji
+                : checkmarkEmoji
+        );
+    }
+
+    refreshBtn();
+
+    btn.addEventListener("click", () => {
+        state.value = state.value === "on" ? "off" : "on";
+        sendMessage(state.value);
+        refreshBtn();
+    });
+})();
