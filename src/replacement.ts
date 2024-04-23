@@ -2,6 +2,8 @@ import { isTrueForAnyAncestorElement } from "./utils";
 
 const excludedParents = ["SCRIPT", "STYLE", "INPUT", "TEXTAREA"];
 
+const urgencyAttribute = "data-urgency-randomizer";
+
 export function findMatchingNodes(root: Node) {
     const matchingNodes: MatchingNode[] = [];
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
@@ -13,7 +15,7 @@ export function findMatchingNodes(root: Node) {
         if (!textNode.textContent)
             continue;
 
-        if (parent.hasAttribute("data-urgency-randomizer"))
+        if (parent.hasAttribute(urgencyAttribute))
             continue;
 
         if (isTrueForAnyAncestorElement(parent, ancestor => (
@@ -42,7 +44,7 @@ export function findMatchingNodes(root: Node) {
 
 export function replaceMatchingNode(matchingNode: MatchingNode) {
     const containerTag = document.createElement("span");
-    containerTag.setAttribute("data-urgency-randomizer", "container");
+    containerTag.setAttribute(urgencyAttribute, "container");
 
     const text = matchingNode.node.textContent!;
 
@@ -76,21 +78,27 @@ export function replaceMatchingNode(matchingNode: MatchingNode) {
         }
         else {
             const contentTag = document.createElement("span");
-            contentTag.setAttribute("data-urgency-randomizer", "content");
+            contentTag.setAttribute(urgencyAttribute, "content");
             containerTag.appendChild(contentTag);
 
             const originalContentTag = document.createElement("span");
-            originalContentTag.setAttribute("data-urgency-randomizer", "og");
+            originalContentTag.setAttribute(urgencyAttribute, "og");
             originalContentTag.innerHTML = entry.value;
             originalContentTag.style.display = "none";
             contentTag.appendChild(originalContentTag);
 
             const replacedContentTag = document.createElement("span");
-            replacedContentTag.setAttribute("data-urgency-randomizer", "replacer");
+            replacedContentTag.setAttribute(urgencyAttribute, "replacer");
             replacedContentTag.innerHTML = entry.replacer;
             contentTag.appendChild(replacedContentTag);
         }
     }
+
+    const fullOgTag = document.createElement("span");
+    fullOgTag.setAttribute(urgencyAttribute, "fullog");
+    fullOgTag.innerHTML = text;
+    fullOgTag.style.display = "none";
+    containerTag.appendChild(fullOgTag);
 
     matchingNode.node.after(containerTag);
     matchingNode.node.remove();
@@ -107,4 +115,27 @@ export function findAndReplaceNodesUnder(root: Node) {
 
     for (const m of matchingNodes)
         replaceMatchingNode(m);
+}
+
+export function undoReplacement() {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT);
+    const list: HTMLSpanElement[] = [];
+
+    while (walker.nextNode()) {
+        const element = walker.currentNode as HTMLElement;
+        if (element.tagName !== "SPAN")
+            continue;
+
+        if (element.getAttribute(urgencyAttribute) !== "container")
+            continue;
+
+        list.push(element);
+    }
+
+    for (const element of list) {
+        const fullOgTag = element.querySelector(`[${urgencyAttribute}="fullog"]`) as unknown as HTMLSpanElement;
+        const textNode = document.createTextNode(fullOgTag.innerHTML);
+        element.after(textNode);
+        element.remove();
+    }
 }
