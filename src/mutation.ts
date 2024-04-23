@@ -20,4 +20,6 @@ export function onAnyMutation(callback: () => void) {
     window.addEventListener('popstate', function (_event) {
         debounceCallback();
     });
+
+    return observer;
 }
