@@ -1,8 +1,12 @@
 {
   "manifest_version": 3,
   "name": "Urgency Randomizer",
-  "description": "Urgency Randomizer made for C-C",
+  "description": "A joke extensions for my co-workers that replaces the italian words for urgent in the page.",
   "version": "0.1.0",
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": "logo.png"
