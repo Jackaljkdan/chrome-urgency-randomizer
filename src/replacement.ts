@@ -1,4 +1,5 @@
 import { isTrueForAnyAncestorElement } from "./utils";
+import { replacements, wordsToReplace } from "./words";
 
 const excludedParents = ["SCRIPT", "STYLE", "INPUT", "TEXTAREA"];
 
@@ -27,9 +28,13 @@ export function findMatchingNodes(root: Node) {
 
         const text = textNode.textContent;
 
-        const word = "urgente";
-        const regex = new RegExp(word, "ig");
-        const matches = [...text.matchAll(regex)];
+        const matches: RegExpExecArray[] = [];
+
+        for (const word of wordsToReplace) {
+            const regex = new RegExp(word, "ig");
+            for (const m of text.matchAll(regex))
+                matches.push(m as any);
+        }
 
         if (matches.length > 0) {
             matchingNodes.push({
@@ -63,7 +68,7 @@ export function replaceMatchingNode(matchingNode: MatchingNode) {
 
         list.push({
             value: match[0],
-            replacer: "[REDACTED]",
+            replacer: replacements[Math.floor(Math.random() * replacements.length)],
         });
 
         fromIndex = match.index + match[0].length;
