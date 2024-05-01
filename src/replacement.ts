@@ -20,10 +20,10 @@ export function findMatchingNodes(root: Node) {
             continue;
 
         if (isTrueForAnyAncestorElement(parent, ancestor => (
-            ancestor.className.includes("editable"))
+            ancestor.className.includes("editable")
             || ancestor.hasAttribute("g_editable")
             || excludedParents.includes(ancestor.tagName)
-        ))
+        )))
             continue;
 
         const text = textNode.textContent;
