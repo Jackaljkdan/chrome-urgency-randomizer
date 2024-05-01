@@ -139,7 +139,7 @@ export function undoReplacement() {
 
     for (const element of list) {
         const fullOgTag = element.querySelector(`[${urgencyAttribute}="fullog"]`) as unknown as HTMLSpanElement;
-        const textNode = document.createTextNode(fullOgTag.innerHTML);
+        const textNode = document.createTextNode(fullOgTag.innerText);
         element.after(textNode);
         element.remove();
     }
