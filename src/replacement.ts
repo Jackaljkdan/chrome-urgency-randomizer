@@ -19,11 +19,18 @@ export function findMatchingNodes(root: Node) {
         if (parent.hasAttribute(urgencyAttribute))
             continue;
 
-        if (isTrueForAnyAncestorElement(parent, ancestor => (
-            ancestor.className.includes("editable")
-            || ancestor.hasAttribute("g_editable")
-            || excludedParents.includes(ancestor.tagName)
-        )))
+        if (isTrueForAnyAncestorElement(parent, ancestor => {
+            if (ancestor.className == undefined)
+                return false;
+
+            // yes this can happen! sometimes className is not a string
+            if (ancestor.className.includes == undefined)
+                return false;
+
+            return ancestor.className.includes("editable")
+                || ancestor.hasAttribute("g_editable")
+                || excludedParents.includes(ancestor.tagName)
+        }))
             continue;
 
         const text = textNode.textContent;
