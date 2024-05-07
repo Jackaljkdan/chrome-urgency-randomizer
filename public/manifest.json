@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Urgency Randomizer",
-  "description": "A joke extensions for my co-workers that replaces the italian words for urgent in the page.",
+  "description": "Un'estensione scherzosa che sostituisce la parola urgente e le sue varianti nella pagina.",
   "version": "0.1.0",
   "icons": {
     "48": "icon48.png",
