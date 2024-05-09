@@ -121,7 +121,7 @@ export function findAndReplaceAllNodes() {
 }
 
 export function findAndReplaceNodesUnder(root: Node) {
-    console.log("replacing...");
+    // console.log("replacing...");
 
     const matchingNodes = findMatchingNodes(root);
 
