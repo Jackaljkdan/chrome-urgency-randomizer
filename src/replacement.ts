@@ -36,11 +36,19 @@ export function findMatchingNodes(root: Node) {
         const text = textNode.textContent;
 
         const matches: RegExpExecArray[] = [];
+        const matchingIndexes: Set<number> = new Set()
 
         for (const word of wordsToReplace) {
             const regex = new RegExp(word, "ig");
-            for (const m of text.matchAll(regex))
+
+            for (const m of text.matchAll(regex)) {
+                // avoid processing matches on the same word in the text
+                if (matchingIndexes.has(m.index!))
+                    continue;
+
+                matchingIndexes.add(m.index!);
                 matches.push(m as any);
+            }
         }
 
         if (matches.length > 0) {
