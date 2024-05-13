@@ -1,7 +1,7 @@
 import { isTrueForAnyAncestorElement } from "./utils";
 import { replacements, wordsToReplace } from "./words";
 
-const excludedParents = ["SCRIPT", "STYLE", "INPUT", "TEXTAREA"];
+const excludedParents = ["SCRIPT", "STYLE", "INPUT", "TEXTAREA", "HEAD", "NOSCRIPT"];
 
 const urgencyAttribute = "data-urgency-randomizer";
 
