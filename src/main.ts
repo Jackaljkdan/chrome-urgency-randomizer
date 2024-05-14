@@ -2,7 +2,7 @@ import { onAnyMutation } from "./mutation";
 import { findAndReplaceAllNodes, undoReplacement } from "./replacement";
 import { state } from "./state";
 
-console.log(`urgency-randomizer v${chrome.runtime.getManifest().version}`);
+console.log(`urgency-randomizer v${chrome.runtime.getManifest().version}`, state);
 
 let deactivate = () => { };
 

@@ -29,6 +29,8 @@ export function findMatchingNodes(root: Node) {
 
             return ancestor.className.includes("editable")
                 || ancestor.hasAttribute("g_editable")
+                || ancestor.hasAttribute("contenteditable")
+                || ancestor.hasAttribute("data-content-editable-leaf")
                 || excludedParents.includes(ancestor.tagName)
         }))
             continue;
