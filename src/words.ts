@@ -24,6 +24,12 @@ export const replacements = [
     "io non sono ISO",
     "ISO 69420",
     "bello il MePa eh?",
+    "rutto ma non ruttissimo",
+    "penfo fia giufto",
+    "LaUrEtT@94",
+    "_DaDe92_",
+    "DaViDiN@92",
+    "pillola sublinguale",
 
     "bbbeeehhh amico mio!!!",
     "non sei biù rock?",
